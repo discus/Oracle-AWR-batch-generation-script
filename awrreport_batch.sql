@@ -1,6 +1,6 @@
 -- Oracle AWR and AWR SQL report batch generation script 
 -- 
--- This script for Oracle 11g R1/R2 Unix/Linux platform and single instance. 
+-- This script for Oracle 11g R1/R2 Unix/Linux platform. 
 --
 whenever sqlerror exit 1;
 whenever oserror exit 1;
