@@ -96,10 +96,10 @@ DECLARE
 	--
 	C_TOPN CONSTANT PLS_INTEGER := 20;
 	CURSOR cs_sqlid_info(
-    	p_dbid v$database.dbid%TYPE
+    	    p_dbid v$database.dbid%TYPE
 	    ,p_dbin v$instance.instance_number%TYPE
-		,p_snap_id dba_hist_sqlstat.snap_id%TYPE
-		,p_topN PLS_INTEGER
+	    ,p_snap_id dba_hist_sqlstat.snap_id%TYPE
+	    ,p_topN PLS_INTEGER
 	) IS
 		SELECT
 			*
