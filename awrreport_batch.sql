@@ -96,7 +96,9 @@ DECLARE
 	--
 	C_TOPN CONSTANT PLS_INTEGER := 20;
 	CURSOR cs_sqlid_info(
-		 p_snap_id dba_hist_sqlstat.snap_id%TYPE
+    	p_dbid v$database.dbid%TYPE
+	    ,p_dbin v$instance.instance_number%TYPE
+		,p_snap_id dba_hist_sqlstat.snap_id%TYPE
 		,p_topN PLS_INTEGER
 	) IS
 		SELECT
@@ -112,7 +114,9 @@ DECLARE
 							ss.dbid = st.dbid
 						AND	ss.sql_id = st.sql_id
 				WHERE
-					snap_id = p_snap_id
+				    ss.dbid = p_dbid
+				AND ss.instance_number = p_dbin
+				AND ss.snap_id = p_snap_id
 				ORDER BY
 					elapsed_time_delta DESC
 			)
@@ -179,7 +183,7 @@ BEGIN
 					DBMS_OUTPUT.PUT_LINE('spo off;');
 					--
 					-- AWR SQL Report
-					FOR sqlid_info_rec IN cs_sqlid_info(end_snap#, C_TOPN) LOOP
+					FOR sqlid_info_rec IN cs_sqlid_info(databaseid, databasein, end_snap#, C_TOPN) LOOP
 						DBMS_OUTPUT.PUT_LINE(
 							'spo '||'awrsqrpt_'
 							|| TO_CHAR(begin_snap#)||'_'
@@ -217,10 +221,6 @@ undefine report_start_snapid;
 
 clear buffer
 
-get file awrreport_exec_batch.sql nolist;
-del 1 3
-save file awrreport_exec_batch.sql replace;
-
 whenever sqlerror continue;
 whenever oserror continue;
 
@@ -229,5 +229,3 @@ whenever oserror continue;
 set feedback on veri on trimspool off trimout off;
 
 !rm awrreport_exec_batch.sql
-
-	
